@@ -1,36 +1,32 @@
-package com.assessment.parkinglot.application;
+package com.assessment.parkinglot.application.slotstrategy;
 
 import com.assessment.parkinglot.domain.entity.EntryGate;
 import com.assessment.parkinglot.domain.entity.ParkingSlot;
 import com.assessment.parkinglot.domain.valueobject.SlotStatus;
 import com.assessment.parkinglot.domain.valueobject.VehicleType;
 import com.assessment.parkinglot.infra.repository.ParkingSlotRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 @Service
-public class NearestSlotStrategy implements SlotAllocationStrategy {
-
+@Qualifier("random")
+public class RandomSlotStrategy implements SlotAllocationStrategy {
     private final ParkingSlotRepository slotRepository;
+    private final Random random = new Random();
 
-    public NearestSlotStrategy(ParkingSlotRepository slotRepository) {
+    public RandomSlotStrategy(ParkingSlotRepository slotRepository) {
         this.slotRepository = slotRepository;
     }
 
     @Override
     public ParkingSlot findNearestSlot(VehicleType type, EntryGate gate) {
-        // Fetch available slots for vehicle type
         List<ParkingSlot> available = slotRepository.findByTypeAndStatus(type, SlotStatus.AVAILABLE);
-
         if (available.isEmpty()) {
             throw new RuntimeException("Parking lot full for type: " + type);
         }
-
-        // Pick nearest based on distanceFromGate or floor difference
-        return available.stream()
-                        .min(Comparator.comparingInt(slot -> Math.abs(slot.getFloor() - gate.getFloor())))
-                        .orElseThrow();
+        return available.get(random.nextInt(available.size()));
     }
 }

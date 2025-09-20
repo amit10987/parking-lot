@@ -1,6 +1,5 @@
 package com.assessment.parkinglot.domain.entity;
 
-import com.assessment.parkinglot.application.AdminService;
 import com.assessment.parkinglot.domain.valueobject.SlotStatus;
 import com.assessment.parkinglot.domain.valueobject.VehicleType;
 import jakarta.persistence.*;
@@ -37,7 +36,6 @@ public class ParkingSlot {
         this.parkingLot = parkingLot;
         this.type = type;
         this.floor = floor;
-        this.status = SlotStatus.AVAILABLE;
     }
 
     protected ParkingSlot() {}

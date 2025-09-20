@@ -50,7 +50,7 @@ public class ParkingController {
         Vehicle vehicle = vehicleService.registerVehicle(user, plateNo, type);
 
         // Park vehicle and generate ticket
-        Ticket ticket = parkingService.parkVehicle(vehicle, gateId);
+        Ticket ticket = parkingService.parkVehicle(vehicle, gateId, "nearest");
 
         // Return DTO
         return ResponseEntity.ok(TicketDTO.fromEntity(ticket));

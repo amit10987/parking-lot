@@ -1,4 +1,4 @@
-package com.assessment.parkinglot.application;
+package com.assessment.parkinglot.application.slotstrategy;
 
 import com.assessment.parkinglot.domain.entity.EntryGate;
 import com.assessment.parkinglot.domain.entity.ParkingSlot;
