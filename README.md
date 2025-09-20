@@ -11,7 +11,7 @@ Google OAuth2 credentials set up (client ID/secret in application.yml)
 
 ▶️ Running the Application
 # Clone the repo
-git clone https://github.com/your-org/parking-lot.git
+git clone https://github.com/amit10987/parking-lot.git
 cd parking-lot
 
 # Build
