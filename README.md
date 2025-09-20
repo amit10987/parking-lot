@@ -160,6 +160,8 @@ The system uses Google OAuth2 with the following scopes:
 
 **Redirect URI:** `http://localhost:8080/login/oauth2/code/google`
 
+Then update your `application.yml` to use PostgreSQL instead of H2.
+
 ## 🧪 Testing with Postman
 
 Import the provided `parking-lot.postman_collection.json` file into Postman to test all endpoints. The collection includes:
@@ -168,9 +170,59 @@ Import the provided `parking-lot.postman_collection.json` file into Postman to t
 - Sample request bodies
 - All endpoint configurations
 
+## 🏗️ System Features & Requirements Coverage
+
+### ✅ **Important Cases Handled**
+
+**1. Vehicle Types Management**
+- Extensible vehicle types (CAR, TRUCK, MOTORCYCLE) via enum
+- Slot compatibility validation (trucks can't use car slots)
+- Type-specific pricing rules
+
+**2. Smart Slot Allocation**
+- **Strategy Pattern**: 4 allocation strategies (Nearest, FirstAvailable, Random, LevelWise)
+- **Multi-Gate Support**: Handles multiple entry gates consistently
+- **Concurrency Safety**: Pessimistic database locking prevents double-allocation
+
+**3. Ticket Generation**
+- Complete ticket info (vehicle, slot, entry time, gate)
+- **Duplicate Prevention**: Validates existing active tickets for same license plate
+- Unique auto-generated ticket IDs
+
+**4. Payment & Exit Processing**
+- **Dynamic Pricing**: Duration + vehicle type based (BIKE: ₹5/hr, CAR: ₹10/hr, TRUCK: ₹20/hr)
+- **Flexible Rules**: First 2 hours free, hourly charges after
+- **Atomic Processing**: Payment failure prevents slot release
+- Cannot exit without successful payment
+
+**5. Capacity Management**
+- Finite slot tracking with real-time availability
+- Graceful "full lot" rejection with proper messages
+- Multi-floor support with floor-wise allocation
+
+**6. Concurrency & Thread Safety**
+- **Database-level locking** for slot allocation
+- **Transaction management** ensures data consistency
+- Handles multiple simultaneous entry/exit operations
+
+**7. Security & Authentication**
+- **Google OAuth2** integration with JWT tokens
+- **Role-based access**: ADMIN (manage lots/slots) vs USER (park/pay)
+- Protected API endpoints with proper authorization
+
+## 🔧 Technical Highlights
+
+- **Domain-Driven Design** with clean separation of concerns
+- **Strategy Pattern** for extensible slot allocation algorithms
+- **Pessimistic Locking** prevents race conditions in concurrent scenarios
+- **Global Exception Handling** for consistent error responses
+- **Atomic Transactions** ensure data integrity across operations
+
 ## 📝 Notes
 
-- All admin endpoints require proper authentication
-- Vehicle types should match the supported types in your system
+- All admin endpoints require ADMIN role authentication
+- Vehicle types should match the supported enum values (CAR, TRUCK, MOTORCYCLE)
 - Ticket IDs are generated automatically during vehicle entry
-- The system tracks parking duration for billing purposes
+- System tracks parking duration for accurate billing
+- Pessimistic locking ensures thread-safe slot allocation
+- Payment must be completed before slot is released
